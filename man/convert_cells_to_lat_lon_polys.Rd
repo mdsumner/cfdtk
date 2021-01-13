@@ -10,9 +10,9 @@ convert_cells_to_lat_lon_polys(
 )
 }
 \arguments{
-\item{proj4string}{A proj4string describing coordinate reference system to be used (set to "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" by default}
+\item{plot_cell_points}{Dataframe of cells to return polygons for, taken from a cell orography lookup}
 
-\item{cells}{Dataframe of cells to return polygons for, taken from a cell orography lookup}
+\item{proj4string}{A proj4string describing coordinate reference system to be used (set to "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" by default}
 }
 \value{
 SpatialPolygons object with polygons for all of the cells
@@ -22,9 +22,4 @@ Takes a list of cells from a cell orography lookup and returns a list of Spatial
 }
 \details{
 Useful to overlay cell boundaries on a plot.
-}
-\examples{
-cell_orog_lookup <- readRDS('/path/to/orog_file.rds')
-plot_cell_points <- cell_orog_lookup \%>\% filter(show_this_plot == TRUE)
-sp_polys <- convert_cells_to_lat_lon_polys(plot_cell_points)
 }

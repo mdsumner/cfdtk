@@ -28,5 +28,7 @@ write_to_RDS_file(x, output_directory, filename)
 This collection of wrapper functions handle a number of general tasks, such as ensuring the target directory exists and logging the start/end process and the size of the file.
 }
 \examples{
-write_to_file(datasets::mtcars, '/path/to/dir', 'project_name_', 'csv')
+\donttest{
+write_to_file(datasets::mtcars, '/path/to/dir', 'project_name', 'csv')
+}
 }

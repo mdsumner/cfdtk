@@ -23,9 +23,5 @@ By default the first 50 rows of an object will be shown.
 }
 \details{
 This is intended as a quick way to type this in the console,
-by typing the name of a dataframe and piping it to \code{QV} using the RStudio keyboard shortcut Ctrl+Shift+m.
-}
-\examples{
-QuickView(iris)
-QV(iris)
+by typing the name of a data frame and piping it to \code{QV}.
 }

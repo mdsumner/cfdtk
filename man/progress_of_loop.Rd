@@ -42,4 +42,12 @@ lapply(letters, function(letter)  {
   loginfo(progress_of_loop(letter, letters))
   stringr::str_to_upper(letter)
 }) \%>\% unlist
+\donttest{
+all_files <- glue("/path/to/file/{letters}.txt")
+
+loginfo_progress(all_files[12], all_files)
+
+loginfo_progress(all_files[1], all_files, FUN = basename)
+loginfo_progress(all_files[5], all_files, FUN = basename)
+}
 }

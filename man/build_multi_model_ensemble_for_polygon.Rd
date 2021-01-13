@@ -2,7 +2,7 @@
 % Please edit documentation in R/cfdtk.R
 \name{build_multi_model_ensemble_for_polygon}
 \alias{build_multi_model_ensemble_for_polygon}
-\title{Build multi-model ensemble dataframe}
+\title{Build multi-model ensemble data frame}
 \usage{
 build_multi_model_ensemble_for_polygon(
   source_data_directory,
@@ -14,15 +14,15 @@ build_multi_model_ensemble_for_polygon(
 \arguments{
 \item{source_data_directory}{Directory with saved model}
 
-\item{target_region_code}{Region to build dataframe for}
+\item{target_region_code}{Region to build data frame for}
 
 \item{target_models}{A vector of models to include. If NULL, then all models for data in the directory will be included.}
 
 \item{required_filename_part}{Permits further filtering of which model files to include. Only files that contain this text will be used.}
 }
 \value{
-
+Dataframe
 }
 \description{
-Build multi-model ensemble dataframe
+Build multi-model ensemble data frame
 }

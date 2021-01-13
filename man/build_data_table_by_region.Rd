@@ -30,7 +30,7 @@ build_data_table_by_region(
 \item{convert_epanave_from_energy_to_mm}{If TRUE, will assume epanave values are in energy and will convert them to mm (default: TRUE)}
 }
 \value{
-A dataframe with the contents of \code{time_df} as the data for the with the contents of \code{batch_data} grouped into a single figure, with a column added designating the region
+A data frame with the contents of \code{time_df} as the data for the with the contents of \code{batch_data} grouped into a single figure, with a column added designating the region
 }
 \description{
 Prepare a region based data table for processing

@@ -2,17 +2,24 @@
 % Please edit documentation in R/cfdtk.R
 \name{isFALSE}
 \alias{isFALSE}
-\title{Title}
+\title{Check for FALSE}
 \usage{
 isFALSE(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{any object}
 }
 \value{
-
+returns TRUE if x is identical to FALSE, FALSE otherwise.
 }
 \description{
-ggnewscale uses the built in function isFALSE (for R >= 3.5)
-so make a replacement
+Shortcut for identical(x, FALSE)
+}
+\details{
+ggnewscale and other packages use the built in function isFALSE (for R >= 3.5).
+This is a replacement, until R is upgraded to >= 3.5
+}
+\examples{
+isFALSE(0)
+isFALSE(FALSE)
 }

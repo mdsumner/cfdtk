@@ -27,5 +27,8 @@ generate_output_filename_prefix(
 String to be used at the filename
 }
 \description{
-Format is \code{model-name_domain_cell-start_cell-end} where each component has no underscores
+Format is \code{MODEL_DOMAIN_STARTCELL-ENDCELL} where each component has no underscores
+}
+\examples{
+generate_output_filename_prefix('MODEL', 'DOMAIN', 51, 100, 2000)
 }

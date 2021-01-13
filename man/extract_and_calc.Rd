@@ -2,7 +2,7 @@
 % Please edit documentation in R/cfdtk.R
 \name{extract_and_calc}
 \alias{extract_and_calc}
-\title{Extract data from NetCDF files for all regions in a target cells lookup for given model/domain/variables (and optionally perform post-calculations)}
+\title{Extract data from NetCDF files}
 \usage{
 extract_and_calc(
   target_inputs_table,
@@ -11,12 +11,13 @@ extract_and_calc(
   batch_size = 100,
   batch_limit = NA,
   batch_start_number = 1,
+  options = list(),
   post_process_function = NULL,
   post_process_params = NULL
 )
 }
 \arguments{
-\item{target_inputs_table}{A dataframe with list of input files to extract data from. Must contains the columns: model, domain, variable, file.
+\item{target_inputs_table}{A data frame with list of input files to extract data from. Must contains the columns: model, domain, variable, file.
 The model, domain and variable columns must correspond with the filename, and the variable column must correspond with name of the variable in the NetCDF file.}
 
 \item{target_cells_lookup}{Pre-calculated lookup listing the cells that exist in each region for each domain}
@@ -29,6 +30,8 @@ The model, domain and variable columns must correspond with the filename, and th
 
 \item{batch_start_number}{Begin the extract from a particular batch number. This allows the process to resume after a system crash, etc. Note: does not work in conjunction with batch_limit (leave batch_limit set to NA to avoid strange behaviour).}
 
+\item{options}{List of options to be passed}
+
 \item{post_process_function}{Name of a function to process the data through after it is extracted from the source files}
 
 \item{post_process_params}{Parameters to pass to \code{post_process_function}}
@@ -38,4 +41,12 @@ Data frame with the extracted (and calculated) data
 }
 \description{
 Extract data from NetCDF files for all regions in a target cells lookup for given model/domain/variables (and optionally perform post-calculations)
+}
+\details{
+Option values are nested first by the name of the underlying function that they use, and then the name of the parameter that they set
+
+Current options are:
+- [['extract_variable_from_files_by_cells']][['crop']]
+- [['extract_variable_from_files_by_cells']][['silent']]
+- [['extract_variable_from_files_by_cells']][['silent_but_log_dir']]
 }

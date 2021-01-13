@@ -2,16 +2,18 @@
 % Please edit documentation in R/cfdtk.R
 \name{build_multi_model_mean_from_mme}
 \alias{build_multi_model_mean_from_mme}
-\title{Build multi-model mean dataframe from pre-existing multi-model ensemble}
+\title{Build multi-model mean data frame from pre-existing multi-model ensemble}
 \usage{
 build_multi_model_mean_from_mme(df_mme, group_by_vars = NULL)
 }
 \arguments{
 \item{df_mme}{Dataframe of a multi-model ensemble}
+
+\item{group_by_vars}{Variables to group by}
 }
 \value{
-
+Dataframe
 }
 \description{
-Build multi-model mean dataframe from pre-existing multi-model ensemble
+Build multi-model mean data frame from pre-existing multi-model ensemble
 }

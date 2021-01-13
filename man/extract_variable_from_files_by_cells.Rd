@@ -6,31 +6,29 @@
 \usage{
 extract_variable_from_files_by_cells(
   target_files,
-  target_cell_indices,
+  target_cells,
   target_variable = NULL,
   crop = TRUE,
-  silent = FALSE
+  silent = FALSE,
+  silent_but_log_dir = FALSE
 )
 }
 \arguments{
 \item{target_files}{Vector of NetCDF files to extract values from}
 
-\item{target_cell_indices}{Vector of cell indices to extract from the given files}
+\item{target_cells}{Vector of cell indices to extract from the given files}
 
-\item{target_variable}{If the NetCDF file has multiple variable, specify here otherwise only the first will be extract and a warning message will be produced}
+\item{target_variable}{If the NetCDF file has multiple variable, specify here otherwise only the first will be extracted and a warning message will be produced}
 
 \item{crop}{If TRUE, crop the the brick before performing the data extract --- which can be faster for large datasets, but cause issues for others (default: TRUE)}
 
 \item{silent}{If TRUE, will not loginfo for each file as it is processed (default: FALSE)}
+
+\item{silent_but_log_dir}{If TRUE, will only log the name of each unique directory that files being processed are in.}
 }
 \value{
 Data frame with 3 columns, layer (point in time series), cell, and the value
 }
 \description{
 Extract values from cells from a list of NetCDF files
-}
-\examples{
-target_files = c('/path/to/data/a.nc', '/path/to/data/b.nc', '/path/to/data/c.nc', '/path/to/data/d.nc')
-target_cell_indices = c(1, 2, 3, 4, 5)
-tmax_for_all_region_cells <- extract_variable_from_files_by_cells(target_files, target_cell_indices)
 }

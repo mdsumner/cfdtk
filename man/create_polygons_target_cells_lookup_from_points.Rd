@@ -2,7 +2,7 @@
 % Please edit documentation in R/cfdtk.R
 \name{create_polygons_target_cells_lookup_from_points}
 \alias{create_polygons_target_cells_lookup_from_points}
-\title{Create a target cells lookup from a dataframe of points with lat/lon values}
+\title{Create a target cells lookup from a data frame of points with lat/lon values}
 \usage{
 create_polygons_target_cells_lookup_from_points(
   dataframe_locations,
@@ -13,7 +13,7 @@ create_polygons_target_cells_lookup_from_points(
 )
 }
 \arguments{
-\item{dataframe_locations}{A dataframe of locations representing points to extract.
+\item{dataframe_locations}{A data frame of locations representing points to extract.
 Required columns: label, lat, lon.
 Optional columns: index, code (these will be generated if they don't exist).}
 

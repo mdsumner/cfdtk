@@ -21,7 +21,7 @@ If the values vector never exceeds the threshold, then NA is returned.
 For a vector of dates and a corresponding vector of values, finds the first date which is greater than a particular threshold value
 }
 \examples{
-df <- data.frame(date = seq(as.Date("1961-07-01"), as.Date("1961-07-31"), "days"),
-                 vals = c(1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9) )
-date_vector_exceeds_threshold(df$date, df$vals, 5)
+dates <- seq(from = as.Date("1961-07-01"), length.out = 9, by = "days")
+values <- seq(from = 1.1, length.out = 9, by = 1.1)
+date_vector_exceeds_threshold(dates, values, 5)
 }

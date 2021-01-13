@@ -19,6 +19,6 @@ This function is a convenience wrapper for the \code{paste} function with a defa
 }
 \examples{
 array_to_log <- c('this', 'that', 'other')
-loginfo(glue("The values are: {logarray(array_to_log)}"))
+loginfo(glue::glue("The values are: {logarray(array_to_log)}"))
 loginfo(paste0("The values are: ", logarray(array_to_log)))
 }

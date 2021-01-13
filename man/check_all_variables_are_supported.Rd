@@ -7,7 +7,7 @@
 check_all_variables_are_supported(target_variables)
 }
 \arguments{
-\item{target_variables}{}
+\item{target_variables}{Vector of variables to check}
 }
 \description{
 The "\code{build_data_table}" family of functions contain code to handle extraction of different types of variables.

@@ -14,14 +14,15 @@ colour_darkener(cols, x = 0.5)
 
 \item{x}{Factor to adjust colour by. A value of 1 will return the original colour;
 for \code{colour_lightener} a value of 0 will return white,
-and for \code{colour_darkener} a value of 0 will return black,}
+and for \code{colour_darkener} a value of 0 will return black.}
 }
 \value{
-
+Adjusted colours
 }
 \description{
-desc
+Shade colours by a factor
 }
-\details{
-details
+\examples{
+colour_lightener('dodgerblue', 0.3)
+colour_darkener('goldenrod', 0.8)
 }

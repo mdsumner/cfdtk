@@ -20,9 +20,6 @@ extract_variable_from_files_by_domain(
 
 \item{silent}{If TRUE, will not loginfo for each file as it is processed (default: FALSE)}
 }
-\value{
-Data frame with 3 columns, layer (point in time series), cell, and the value
-}
 \description{
 A wrapper for `extract_variable_from_files_by_cells` where the target cells are extracted from a lookup for a particular domain
 }

@@ -8,7 +8,8 @@ calculate_batch_params(
   total_cells,
   batch_size,
   batch_start_number = 1,
-  batch_limit = NA
+  batch_limit = NA,
+  silent = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ calculate_batch_params(
 \item{batch_start_number}{The batch number to start from (if not supplied, then all batches will be processed, i.e. the first batch will be 1)}
 
 \item{batch_limit}{Maximum number of batches to process (if not supplied, then all batches will be processed)}
+
+\item{silent}{Suppress any logging output}
 }
 \value{
 A named list with calculated batch paramaters for the given inputs. Named elements are:
@@ -34,8 +37,10 @@ A named list with calculated batch paramaters for the given inputs. Named elemen
 Calculate batch indexing parameters
 }
 \examples{
-target_cells_lookup <- readRD('/path/to/lookup_file.rds')
-cells_to_process <- lookup_cell_for_domain(target_cells_lookup, 'MYDOMAIN')
+\donttest{
+target_cells_lookup <- readRDS('examples/target_cells_lookup_bom_forecast_districts.rds')
+cells_to_process <- lookup_cells_for_domain(target_cells_lookup, 'AUS-50')
 calculate_batch_params(total_cells = length(cells_to_process), batch_size = 100)
 calculate_batch_params(total_cells = length(cells_to_process), batch_size = 100, batch_limit = 3)
+}
 }

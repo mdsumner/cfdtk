@@ -21,7 +21,7 @@ If the values vector never drops below the threshold, then NA is returned.
 For a vector of dates and a corresponding vector of values, finds the last date which is less than a particular threshold value
 }
 \examples{
-df <- data.frame(date = seq(as.Date("1961-07-01"), as.Date("1961-07-31"), "days"),
-                 vals = seq(from = 31, to = 1, by = 1) )
-last_date_vector_under_threshold(df$date, df$vals, 4)
+dates <- seq(from = as.Date("1961-07-01"), length.out = 9, by = "days")
+values <- seq(from = 1.1, length.out = 9, by = 1.1)
+last_date_vector_under_threshold(dates, values, 5)
 }

@@ -18,5 +18,5 @@ Vector of starting cells
 Generate vector of starting cells for batch processing
 }
 \examples{
-generate_batch_start_vector(10, 55)  # 1, 11, 21, 31, 41, 51
+cfdtk:::generate_batch_start_vector(10, 55)
 }

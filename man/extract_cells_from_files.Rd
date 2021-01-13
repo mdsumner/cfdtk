@@ -26,5 +26,5 @@ and simplifies the process for extracting data from files where the cells of int
 If a file does not have any of the cells in \code{target_cells} then no cells from the file will be added
 (however, there will of course be an unnecessary increase in computation time as the file is loaded for no reason).
 
-A warning message is shown if some \code{target_cells} are missing from the final dataframe.
+A warning message is shown if some \code{target_cells} are missing from the final data frame.
 }

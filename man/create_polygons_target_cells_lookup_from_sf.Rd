@@ -17,6 +17,11 @@ create_polygons_target_cells_lookup_from_sf(
 \item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
 
 \item{field_names}{A named list with the following names: 'index', 'label', and 'code'}
+
+\item{preferred_domains}{Optional. A named list defining the preferred domain for each polygon.
+If the polygons are spread across multiple domains, then the preferred domain for each polygon must be specified explictly to distinguish between those that overlap.
+Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
+If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
 }
 \value{
 A target cells lookup list

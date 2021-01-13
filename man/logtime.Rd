@@ -7,7 +7,7 @@
 \alias{logtime_init}
 \title{Log and display the time taken for tasks to complete}
 \usage{
-logtime(time_log, log_name, log_type)
+logtime(time_log, log_name, log_type = NULL, .start = FALSE, .end = FALSE)
 
 logtime_print_diff(time_log, log_name, digits = 4)
 
@@ -21,6 +21,10 @@ logtime_init()
 \item{log_name}{Name of the log entry}
 
 \item{log_type}{State of the log entry, either 'start' or 'end'}
+
+\item{.start}{Alternative method of defining the log type; set to TRUE for a 'start' log type}
+
+\item{.end}{Alternative method of defining the log type; set to TRUE for an 'end' log type}
 
 \item{digits}{How many significant digits are to be used for printed value}
 }
@@ -42,9 +46,9 @@ This is sdesigned to be used for tests on the time difference.
 }
 \examples{
 time_log <- logtime_init()
-time_log <- logtime(time_log, 'my_log_name', 'start')
+time_log <- logtime(time_log, 'my_log_name', .start = TRUE)
 # do some things
 # that take time
-time_log <- logtime(time_log, 'my_log_name', 'end')
+time_log <- logtime(time_log, 'my_log_name', .end = TRUE)
 logtime_print_diff(time_log, 'my_log_name')
 }

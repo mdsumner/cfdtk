@@ -21,6 +21,8 @@ This tool is a wrapper around RNetCDF tools that extract and transform the time
 representation in netcdf files into a useable, standard reference, human readable format.
 }
 \examples{
+\donttest{
 files <- dir(path = "/path/to/nc/files/", pattern = "*.nc", full.names = TRUE)
 ts <- extract_and_combine_time_from_netcdf_files(files)
+}
 }

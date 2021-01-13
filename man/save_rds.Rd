@@ -2,16 +2,15 @@
 % Please edit documentation in R/cfdtk.R
 \name{save_rds}
 \alias{save_rds}
-\title{Title}
+\title{Save data frame to rds file, adding or changing the extension of \code{file} if required}
 \usage{
 save_rds(x, file)
 }
 \arguments{
-\item{file}{}
-}
-\value{
+\item{x}{Data frame}
 
+\item{file}{Filename}
 }
 \description{
-Title
+Save data frame to rds file, adding or changing the extension of \code{file} if required
 }

@@ -39,7 +39,7 @@ identify_files_for_target_model_input_thredds(
 \item{tr}{Thredds: temporal resolution}
 }
 \value{
-A dataframe with columns with the model, domain, variable and filename of each file found
+A data frame with columns with the model, domain, variable and filename of each file found
 }
 \description{
 This follows the THREDDS conventions of directory structure and file naming

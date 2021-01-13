@@ -2,18 +2,22 @@
 % Please edit documentation in R/cfdtk.R
 \name{df_add_cell_orog_data}
 \alias{df_add_cell_orog_data}
-\title{Add cell orography information to a dataframe}
+\title{Add cell orography information to a data frame}
 \usage{
 df_add_cell_orog_data(df, cell_orog_lookup)
 }
 \arguments{
-\item{df}{Dataframe}
+\item{df}{Data}
 
 \item{cell_orog_lookup}{Cell orography lookup, as created by \code{create_cell_orography_lookup}}
 }
-\value{
-
-}
 \description{
-Add cell orography information to a dataframe
+Add cell orography information to a data frame
+}
+\examples{
+\donttest{
+df <- readRDS('/path/to/df_with_cell_data.rds')
+cell_orog_lookup <- readRDS('/path/to/cell_orog_lookup.rds')
+df \%>\% df_add_cell_orog_data(cell_orog_lookup)
+}
 }

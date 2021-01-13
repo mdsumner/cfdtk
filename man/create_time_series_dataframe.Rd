@@ -2,7 +2,7 @@
 % Please edit documentation in R/cfdtk.R
 \name{create_time_series_dataframe}
 \alias{create_time_series_dataframe}
-\title{Create time series dataframe from a time series vector}
+\title{Create time series data frame from a time series vector}
 \usage{
 create_time_series_dataframe(time_series, add_Austral_columns = TRUE)
 }
@@ -15,5 +15,14 @@ create_time_series_dataframe(time_series, add_Austral_columns = TRUE)
 Dataframe with supplied dates and additional date related columns
 }
 \description{
-From a vector of POSIX dates, create a dataframe with additional columns derived from the supplied dates.
+From a vector of POSIX dates, create a data frame with additional columns derived from the supplied dates.
+}
+\examples{
+create_time_series_dataframe(seq.Date(from = as.Date('1960-01-01'),
+                                      to = as.Date('2020-01-01'),
+                                      by = 'day'))
+create_time_series_dataframe(seq.Date(from = as.Date('1960-01-01'),
+                                      to = as.Date('2020-01-01'),
+                                      by = 'day'),
+                             add_Austral_columns = FALSE)
 }

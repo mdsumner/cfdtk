@@ -8,7 +8,8 @@ collate_polygon_data_for_model(
   extract_directory,
   target_cells_lookup,
   target_region_code,
-  target_model
+  target_model,
+  target_cells = NULL
 )
 }
 \arguments{
@@ -16,12 +17,14 @@ collate_polygon_data_for_model(
 
 \item{target_cells_lookup}{Pre-calculated lookup listing the cells that exist in each region for each domain}
 
-\item{target_region_code}{Region code to be added as a column to this dataframe}
+\item{target_region_code}{Region code to be added as a column to this data frame}
 
 \item{target_model}{Model to use}
+
+\item{target_cells}{Limit the cells to be collated (i.e. to split a file into parts). If NULL (the default), then all cells with be collated}
 }
 \value{
-
+Dataframe
 }
 \description{
 Collate data from an extract directory for a given polygon for a given model

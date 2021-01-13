@@ -15,9 +15,10 @@ String
 \description{
 String will be converted to lowercase with underscores in place of spaces, and punctuation removed
 }
+\details{
+There will never be more than one underscore in a row, and the code cannot start or end with an underscore
+}
 \examples{
 label_to_code('Tasmania East Coast')  # tasmania_east_coast
-label_to_code("This/That won't be the Other")  # this_that_wont_be_the_other
-label_to_code('Description (Extra Info)')  # description_extra_info
-label_to_code('Description - Extra Info')  # description_extra_info
+label_to_code('Launceston (Tasmania)')  # launceston_tasmania
 }

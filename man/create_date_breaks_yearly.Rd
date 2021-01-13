@@ -10,8 +10,13 @@ create_date_breaks_yearly(dates)
 \item{dates}{Vector of dates (POSIXct or date)}
 }
 \value{
-
+Vector of dates
 }
 \description{
 for scale_x_datetime
+}
+\examples{
+create_date_breaks_yearly(seq.Date(from = as.Date('1950-06-01'),
+                                   to = as.Date('2020-06-01'),
+                                   by = 'day'))
 }

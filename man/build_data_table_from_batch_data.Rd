@@ -33,7 +33,7 @@ build_data_table_from_batch_data(
 \item{convert_epanave_from_energy_to_mm}{If TRUE, will assume epanave values are in energy and will convert them to mm (default: TRUE)}
 }
 \value{
-A dataframe with the contents of \code{time_df} as the data for the with the contents of \code{batch_data} added
+A data frame with the contents of \code{time_df} as the data for the with the contents of \code{batch_data} added
 }
 \description{
 The data can be from an arbitrary group of cells (e.g. a batch)

@@ -2,16 +2,23 @@
 % Please edit documentation in R/cfdtk.R
 \name{col2hex}
 \alias{col2hex}
-\title{Title}
+\title{Colour to hexadecimal value conversion}
 \usage{
 col2hex(col)
 }
 \arguments{
-\item{col}{}
+\item{col}{vector of any of the three kinds of \R color specifications,
+    i.e., either a color name (as listed by \code{\link[grDevices]{colors}()}), a
+    hexadecimal string of the form \code{"#rrggbb"} or
+    \code{"#rrggbbaa"} (see \code{\link[grDevices]{rgb}}), or a positive integer
+    \code{i} meaning \code{\link[grDevices]{palette}()[i]}.}
 }
 \value{
-
+A character vector with equivalent hexadecimal values of the input colours (each hex value will be preceeded with a hash)
 }
 \description{
-Title
+\bold{R} colour to hexadecimal conversion.
+}
+\examples{
+col2hex(c('dodgerblue', 'dodgerblue4', 'firebrick', 'firebrick4', 'forestgreen'))
 }

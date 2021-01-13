@@ -23,10 +23,10 @@ create_shapes_from_dataframe_of_points(
 Simple feature collection
 }
 \description{
-Creates a simple feature collection of sf buffers centered around points defined in a dataframe
+Creates a simple feature collection of sf buffers centered around points defined in a data frame
 }
 \details{
-Dataframe must contain latitidues, longitudes, and labels of the points;
+Data frame must contain latitidues, longitudes, and labels of the points;
 in columns named 'lat', 'lon', and 'label', respectively.
 
 The default buffer distance is 0.05
@@ -36,6 +36,8 @@ dataframe_locations <- tribble(~lat, ~lon, ~label,
 48.858222, 2.2945, 'Eiffel Tower',
 51.5007, -0.1245, 'Big Ben')
 x <- create_shapes_from_dataframe_of_points(dataframe_locations)
+\donttest{
 ggplot(x) + borders('world') + geom_sf(fill = 'red', colour = 'red') +
   coord_sf(xlim = c(-10, 10), ylim = c(45, 55))
+}
 }

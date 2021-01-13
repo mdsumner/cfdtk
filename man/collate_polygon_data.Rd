@@ -24,12 +24,12 @@ collate_polygon_data_for_models(
 
 \item{target_cells_lookup}{Pre-calculated lookup listing the cells that exist in each region for each domain}
 
-\item{target_region_code}{Region code to be added as a column to this dataframe}
+\item{target_region_code}{Region code to be added as a column to this data frame}
 
-\item{target_models}{Vector of models to build dataframe from. If NULL (the default), then all available models in the extract directory will be used.}
+\item{target_models}{Vector of models to build data frame from. If NULL (the default), then all available models in the extract directory will be used.}
 }
 \value{
-
+Dataframe
 }
 \description{
 Collate data from an extract directory for a given polygon for multiple (typically all) models

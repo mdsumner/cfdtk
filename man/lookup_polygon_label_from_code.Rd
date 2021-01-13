@@ -9,7 +9,7 @@ lookup_polygon_label_from_code(target_cells_lookup, region)
 \arguments{
 \item{target_cells_lookup}{Pre-calculated lookup listing the cells that exist in each region for each domain}
 
-\item{region}{}
+\item{region}{Region code}
 }
 \value{
 Label

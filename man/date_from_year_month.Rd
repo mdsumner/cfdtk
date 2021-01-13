@@ -14,7 +14,7 @@ date_from_year_month(year, month, tz = "AEDT")
 \item{tz}{Timezone, as is passed to as.POSIXct (default: 'AEDT')}
 }
 \value{
-
+POSIX date
 }
 \description{
 Convert a year and month to a POSIX date corresponding to the first of that month

@@ -6,8 +6,8 @@
 \usage{
 pick_preferred_domain_from_lookup(
   preferred_domains,
-  target_domains_files,
-  polygon_code
+  polygon_code,
+  target_domains_files = NULL
 )
 }
 \arguments{
@@ -16,14 +16,14 @@ If the polygons are spread across multiple domains, then the preferred domain fo
 Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
 If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
 
-\item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
+\item{polygon_code}{Polygon to get preferrend domain for}
 
-\item{polygon_code}{}
+\item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
 }
 \value{
 Domain to be chosen
 }
 \description{
-If there is only one domain, then set the preferred domain as that.
+If there is only one domain in the target domain files, or if a single string is provided, then the preferred domain will be set as that.
 Otherwise, a list of which domain is the preferred to list the matching cells must be used.
 }

@@ -18,7 +18,7 @@ convert_all_polygons_to_multipolygons(
 A list of simple features
 }
 \description{
-Converts a simple feature collection, where each feature has multiple polygons making up its geometry,
+Converts a simple feature collection, where each feature may have multiple polygons making up its geometry,
 to a list of simple features only having one MULTIPOLYGON object making up its geometry.
 }
 \details{

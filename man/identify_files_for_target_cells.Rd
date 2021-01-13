@@ -14,6 +14,10 @@ identify_files_for_target_cells(
 \arguments{
 \item{extract_directory}{Directory with saved data files with the containing cells in the filename, e.g. "0365-1389"}
 
+\item{target_model}{Target model, used to construct search pattern for file names}
+
+\item{target_domain}{Target domain, used to construct search pattern for file names}
+
 \item{target_cells}{Vector of cells}
 }
 \value{

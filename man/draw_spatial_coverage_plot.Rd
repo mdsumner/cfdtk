@@ -2,6 +2,9 @@
 % Please edit documentation in R/cfdtk.R
 \name{draw_spatial_coverage_plot}
 \alias{draw_spatial_coverage_plot}
+\alias{draw_spatial_coverage_plot_for_region}
+\alias{draw_spatial_coverage_plot_for_region_in_domain}
+\alias{draw_spatial_coverage_plot_for_region_in_domain_with_cell_numbers}
 \title{Draw a spatial coverage plot}
 \usage{
 draw_spatial_coverage_plot(
@@ -13,35 +16,115 @@ draw_spatial_coverage_plot(
   show_cell_labels = FALSE,
   proj4string = common_defaults$proj4string
 )
+
+draw_spatial_coverage_plot_for_region(
+  target_cells_lookup,
+  cell_orog_lookup,
+  region,
+  bg_map_sf = NULL,
+  show_cell_labels = FALSE
+)
+
+draw_spatial_coverage_plot_for_region_in_domain(
+  target_cells_lookup,
+  cell_orog_lookup,
+  region,
+  domain,
+  bg_map_sf = NULL,
+  show_cell_labels = FALSE
+)
+
+draw_spatial_coverage_plot_for_region_in_domain_with_cell_numbers(
+  target_cells_lookup,
+  cell_orog_lookup,
+  region,
+  domain,
+  target_cells,
+  show_cell_labels = FALSE
+)
 }
 \arguments{
 \item{target_cells_lookup}{Pre-calculated lookup listing the cells that exist in each region for each domain}
 
-\item{plot_cell_points}{Data frame with \code{lon} and \code{lat} values for each \code{cell_number} to plot}
+\item{plot_cell_points}{Data frame with \code{lon} and \code{lat} values for each \code{cell} to plot}
 
-\item{region}{Region (will be shown on the plot)}
+\item{region}{Region to plot (either index in the list or region code, e.g. 37 or 'mudgee')}
 
-\item{domain}{Domain (will be shown on the plot)}
+\item{domain}{Domain to plot region and cells on}
 
 \item{bg_map_sf}{An optional simple feature object to plot as a background map}
 
 \item{show_cell_labels}{logical. If TRUE then shows the labels for the cell numbers. Set to FALSE by default.}
 
 \item{proj4string}{A proj4string describing coordinate reference system to be used (set to "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" by default}
+
+\item{cell_orog_lookup}{Cell orography lookup, as created by \code{create_cell_orography_lookup}}
+
+\item{target_cells}{Vector of cells in the domain to draw on the plot of region}
 }
 \value{
 ggplot object for the plot
 }
 \description{
-Draw a spatial coverage plot
+Creates a spatial coverage plot of a region, optionally on a background map and/or with cell number labels.
+}
+\details{
+These plots are useful for visualising where the cell boundaries lie in relation to the shape of the region.
+
+\code{draw_spatial_coverage_plot_for_region} uses the matching cells for the preferred domain for the region (as per \code{target_cells_lookup}).
+\code{draw_spatial_coverage_plot_for_region_in_domain} uses the matching cells for the specified domain.
+\code{draw_spatial_coverage_plot_for_region_in_domain_with_cell_numbers} plots only the cells specified in \code{target_cells}
 }
 \examples{
+\donttest{
 target_cells_lookup <- readRDS('/path/to/lookup_file.rds')
 cell_orog_lookup <- readRDS('/path/to/orog_file.rds')
+
+draw_spatial_coverage_plot_for_region(target_cells_lookup,
+                                      cell_orog_lookup,
+                                      region = 'barossa_valley')
+
+draw_spatial_coverage_plot_for_region(target_cells_lookup,
+                                      cell_orog_lookup,
+                                      region = 'barossa_valley',
+                                      show_cell_labels = TRUE)
+
+
+draw_spatial_coverage_plot_for_region_in_domain(target_cells_lookup,
+                                                cell_orog_lookup,
+                                                region = 'glenrowan',
+                                                domain = 'VIC-5')
+
+draw_spatial_coverage_plot_for_region_in_domain(target_cells_lookup,
+                                                cell_orog_lookup,
+                                                region = 'glenrowan',
+                                                domain = 'SEA-10')
+
+
+all_cells <- lookup_cells_for_region_with_domain(target_cells_lookup, 'glenrowan', 'VIC-5')
+not_all_cells <- all_cells[1:(length(all_cells) \%/\% 2)]
+
+draw_spatial_coverage_plot_for_region_in_domain_with_cell_numbers(
+  target_cells_lookup,
+  cell_orog_lookup,
+  region = 'glenrowan',
+  domain = 'VIC-5',
+  target_cells = not_all_cells,
+  show_cell_labels = TRUE)
+
+
 region_code <- 'glenrowan'
 domain_code <- 'VIC-5'
 
-plot_cell_points <- get_cells_from_orog_lookup_for_region_domain(target_cells_lookup, cell_orog_lookup, region = region_code, domain = domain_code)
+plot_cell_points <- get_cells_for_region_with_domain(target_cells_lookup,
+                                                     cell_orog_lookup,
+                                                     region = region_code,
+                                                     domain = domain_code)
 
-draw_spatial_coverage_plot(target_cells_lookup, plot_cell_points, region = region_code, domain = domain_code, show_cell_labels = TRUE)
+draw_spatial_coverage_plot(target_cells_lookup,
+                           plot_cell_points,
+                           region = region_code,
+                           domain = domain_code,
+                           show_cell_labels = TRUE)
+}
 }

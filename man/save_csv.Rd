@@ -2,16 +2,15 @@
 % Please edit documentation in R/cfdtk.R
 \name{save_csv}
 \alias{save_csv}
-\title{Title}
+\title{Save data frame to csv file, adding or changing the extension of \code{file} if required}
 \usage{
 save_csv(x, file)
 }
 \arguments{
-\item{file}{}
-}
-\value{
+\item{x}{Data frame}
 
+\item{file}{Filename}
 }
 \description{
-Title
+Save data frame to csv file, adding or changing the extension of \code{file} if required
 }

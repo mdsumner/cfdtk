@@ -18,5 +18,5 @@ Vector of ending cells
 Generate vector of ending cells for batch processing
 }
 \examples{
-generate_batch_end_vector(10, 55)  # 10, 20, 30, 40, 55
+cfdtk:::generate_batch_end_vector(10, 55)
 }

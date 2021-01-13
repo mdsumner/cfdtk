@@ -56,7 +56,9 @@ In addition, the filename will be prefixed with "A4_" (if not already) to make i
 This automatic prefix can be prevented by setting the \code{preserve} parameter to \code{TRUE} (it is \code{FALSE} by default).
 }
 \examples{
+\donttest{
 grob <- ggplot() + geom_point(data = datasets::mtcars, mapping = aes(x = cyl, y = hp))
 file <- '/path/to/output/figures/img.png'
 save_png(grob, file)
+}
 }

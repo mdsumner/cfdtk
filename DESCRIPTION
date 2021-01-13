@@ -1,37 +1,45 @@
 Package: cfdtk
 Type: Package
 Title: Climate Futures Development Toolkit
-Version: 0.3.20201020
-Date: 2020-09-11
+Version: 0.4.20210104
+Date: 2021-01-04
 Authors@R: c(person("Climate Futures Tasmania", role = c("aut")),
              person("Dean", "Rollins", email = "dean.rollins@utas.edu.au", role = c("ctb", "cre")),
              person("Tom", "Remenyi", email = "tom.remenyi@utas.edu.au", role = c("ctb")))
 URL: http://www.climatefutures.org.au
-Description: A collection of functions to help analyse data in the Climate Futures data archives
-    Creating lookups for target cells within regions for domains
-    Useful utility functions to help managing projects
-License: For internal use only
+Description: A collection of functions to help analyse data in the Climate Futures data archives,
+    including methods for creating lookups for target cells within regions for domains,
+    useful utility functions to help managing projects, and more.
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 RoxygenNote: 7.1.1
 Depends: logging,
-    raster,
+    stringr,
+    glue,
     dplyr,
     tidyr,
-    zoo,
-    rgdal,
-    sf,
-    stringr,
     ggplot2,
-    ncdf4,
-    RNetCDF,
-    glue,
-    lubridate,
+    sf,
+    lubridate
 Imports:
+    rlang,
+    methods,
+    sp,
+    raster,
     readr,
     geosphere,
-    lwgeom
+    grDevices,
+    gdata,
+    lwgeom,
+    plyr,
+    rgdal,
+    ncdf4,
+    RNetCDF,
+    magick,
+    zoo,
+    tibble
 Suggests: testthat,
     knitr,
     rmarkdown

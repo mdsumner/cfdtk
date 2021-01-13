@@ -14,6 +14,21 @@ generate_target_cells_lookup_entry(
   matching_cells_with_weights
 )
 }
+\arguments{
+\item{id}{Value for id}
+
+\item{code}{Value for code}
+
+\item{label}{Value for label}
+
+\item{sf}{An sf object for the polygon (for convenience when making plots)}
+
+\item{domain}{Value for the preferred domain}
+
+\item{matching_cells}{Named list for each domain with the cells as an integer vector}
+
+\item{matching_cells_with_weights}{Named list for each domain with the cells and the percentage coverage they are in the polygon (weight) as a dataframe}
+}
 \value{
 List
 }

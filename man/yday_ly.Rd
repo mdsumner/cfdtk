@@ -7,10 +7,8 @@
 yday_ly(x)
 }
 \arguments{
-\item{x}{}
-}
-\value{
-
+\item{x}{a POSIXct, POSIXlt, Date, chron, yearmon, yearqtr, zoo, zooreg,
+timeDate, xts, its, ti, jul, timeSeries, or fts object.}
 }
 \description{
 Find the day of year for a date, where the leap day of Feb 29 is considered to have the same value as Feb 28.
@@ -18,7 +16,17 @@ Find the day of year for a date, where the leap day of Feb 29 is considered to h
 \details{
 This is useful when analysing data across the day of year dimension, as it avoids a day offset of 1 for leap years.
 Calculating aggregates based on the output of this function will group Feb 28 and Feb 29 together.
-Any days after this will always have the same day of year value.
+Any days after this will always have the same day of year value, whether it is in a leap year or not.
 
-i.e., a value of 365 is always Dec 31, rather than Dec 31 on non leap years, and Dec 30 on leap years.
+i.e., a value of 365 is always Dec 31 (rather than Dec 31 on non leap years, and Dec 30 on leap years)
+}
+\examples{
+yday_ly(as.Date("2008-02-27"))
+yday_ly(as.Date("2008-02-28"))
+yday_ly(as.Date("2008-02-29"))
+yday_ly(as.Date("2008-03-01"))
+lubridate::yday(as.Date("2008-02-27"))
+lubridate::yday(as.Date("2008-02-28"))
+lubridate::yday(as.Date("2008-02-29"))
+lubridate::yday(as.Date("2008-03-01"))
 }

@@ -2,24 +2,24 @@
 % Please edit documentation in R/cfdtk.R
 \name{find_matching_cells_in_target_domains_for_polygon_sf}
 \alias{find_matching_cells_in_target_domains_for_polygon_sf}
-\title{*TODO*}
+\title{Get all matching cells for a polygon simple feature}
 \usage{
 find_matching_cells_in_target_domains_for_polygon_sf(
   polygon_sf,
-  target_domains_files
+  target_domains_files,
+  weights_cutoff = 0
 )
 }
 \arguments{
-\item{polygon_sf}{A simple feature (sf) object representing the polygon. TODO: describe required fields (e.g. index, code, label)}
+\item{polygon_sf}{A simple feature (sf) object representing the polygon}
 
 \item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
+
+\item{weights_cutoff}{Cells with a weighting below this value will be excluded from the returned results}
 }
 \value{
 A named list with the domains as the keys, and the values being vector of the matching cell numbers
 }
 \description{
-Get all matching cells for a polygon simple feature
-}
-\details{
 Find the cells covered by the area of the polygon of an sf object in each of a list of domains
 }

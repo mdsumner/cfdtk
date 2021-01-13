@@ -4,10 +4,12 @@
 \alias{ensure_dir_exists}
 \title{Ensure a directory exists}
 \usage{
-ensure_dir_exists(path)
+ensure_dir_exists(path, silent = FALSE)
 }
 \arguments{
 \item{path}{The directory}
+
+\item{silent}{Do not return the directory}
 }
 \value{
 The directory
@@ -21,6 +23,7 @@ This is a convenience wrapper for dir.create(), with a small addition: the direc
 This allows the directory to be assigned to a variable on the same line as calling the function (see examples).
 }
 \examples{
+\donttest{
 output_directory <- ensure_dir_exists('/mnt/projects/my_project')
 output_directory <- '/mnt/projects/my_project' \%>\% ensure_dir_exists
 output_directory <- file.path('/mnt/projects/my_project', 'v1') \%>\% ensure_dir_exists
@@ -28,4 +31,5 @@ output_directory <- file.path('/mnt/projects/my_project', 'v1') \%>\% ensure_dir
 file_to_save <- '/path/to/file_to_save.rds'
 ensure_dir_exists(dirname(file_to_save))
 saveRDS(mtcars, file_to_save)
+}
 }

@@ -8,9 +8,8 @@ scale_x_datetime_decadal(dates, ...)
 }
 \arguments{
 \item{dates}{Vector of dates (POSIXct or date)}
-}
-\value{
 
+\item{...}{Parameters passed to \code{scale_x_datetime}}
 }
 \description{
 Title

@@ -4,20 +4,41 @@
 \alias{create_or_read}
 \title{Load pre-calculated results from file if it exists, if not calculate results as save it to the file}
 \usage{
-create_or_read(file, FUN, ARGS, force = FALSE)
+create_or_read(
+  file,
+  FUN,
+  ARGS = list(),
+  force = FALSE,
+  skip_read_if_exists = FALSE
+)
 }
 \arguments{
 \item{file}{Name of the file}
 
 \item{FUN}{Function (or code block) to create the object that is to be stored and subsequently retrieved from the \code{file}}
 
-\item{ARGS}{List of arguments to be passed to the function}
+\item{ARGS}{List of arguments to be passed to the function. Can be skipped (the default is an empty list), and the arguments are directly passed in the \code{FUN} parameter.}
 
 \item{force}{logical. If TRUE, then force recreation and saving of the object, even if file already exists. Set to FALSE by default.}
+
+\item{skip_read_if_exists}{logical. TODO}
 }
 \value{
-
+The result of FUN
 }
 \description{
 Load pre-calculated results from file if it exists, if not calculate results as save it to the file
+}
+\examples{
+\donttest{
+create_or_read(
+  file = "/path/to/output.file",
+  FUN = function(param1, param2) {
+    # a function using params
+  },
+  ARGS = list(param1 = "value",
+              param2 = "another_value"),
+  force = FALSE,
+  skip_read_if_exists = TRUE)
+}
 }

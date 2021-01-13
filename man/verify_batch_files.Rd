@@ -24,7 +24,7 @@ verify_batch_files(
 \item{batch_size}{Number of cells in each batch. Each batch is saved to disk for later use. If this number is too high then performance will suffer. Set to 100 by default.}
 }
 \value{
-A dataframe with a row for each batch specifying the batch number,
+A data frame with a row for each batch specifying the batch number,
 the first and last cell in the batch, the expected filename pattern,
 and the name of the actual file (if it exists)
 }

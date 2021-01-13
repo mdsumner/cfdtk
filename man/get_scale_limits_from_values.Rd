@@ -2,7 +2,7 @@
 % Please edit documentation in R/cfdtk.R
 \name{get_scale_limits_from_values}
 \alias{get_scale_limits_from_values}
-\title{Title}
+\title{Calculate scale limits from data values for different scenarios}
 \usage{
 get_scale_limits_from_values(
   values,
@@ -13,16 +13,29 @@ get_scale_limits_from_values(
 )
 }
 \arguments{
-\item{symmetrical}{Make scale symmetrical over zero
+\item{values}{Values that will be plotted}
 
-Behaviour will be strange with symmetrical and snap set}
+\item{interval}{Set the limits of the scale to the next multiple of this interval past the min and max of \code{values}}
+
+\item{snap_lower_to_zero}{If the lowest valus is above zero, then snap the lower limit of the scale to zero}
+
+\item{snap_upper_to_zero}{If the highest value is below zero, then snap the upper limit of the scale to zero}
+
+\item{symmetrical}{Make scale symmetrical about zero}
 }
 \value{
-
+Vector with two values, [1] is the min scale limit, [2] is the max scale limit
 }
 \description{
-tests to write:
+The scales can be forced to start or end at zero, be extended to an interval, or set to be symmetrical about zero
+}
+\details{
+When the \code{symmetrical} parameter is set the \code{snap} parameters will have no effect.
 }
 \examples{
-
+get_scale_limits_from_values(values = mtcars$mpg,
+                             interval = 5,
+                             snap_lower_to_zero = TRUE,
+                             snap_upper_to_zero = FALSE,
+                             symmetrical = FALSE)
 }

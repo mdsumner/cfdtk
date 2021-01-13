@@ -6,30 +6,23 @@
 \usage{
 find_matching_cells_for_polygon_from_spatial_objects(
   geospatial_feature_spdf,
-  geospatial_array
+  geospatial_array,
+  weights_cutoff = 0
 )
 }
 \arguments{
-\item{geospatial_feature_spdf}{SpatialPolygons object}
+\item{geospatial_feature_spdf}{SpatialPolygonsDataFrame of the spatial object to be examined}
 
-\item{geospatial_array}{Raster\* object (or a SpatialPixels\* or SpatialGrid\* object)}
+\item{geospatial_array}{Raster* object (or a SpatialPixels* or SpatialGrid* object)}
+
+\item{weights_cutoff}{Cells with a weighting below this value will be excluded from the returned results}
 }
 \value{
-Vector of cells
+Data frame with 2 columns: cell (the cell number), and weight (the weighting)
 }
 \description{
-The geospatial feature
-The geospatial array can be produced from a raster of a NetCDF file.
+This functions uses \code{raster::cellFromPolygon} with \code{weights = TRUE} to determine which cells in the geospatial array are covered by the SpatialPolygonsDataFrame and what fraction of each cell is covered.
 }
 \details{
-It is important that both parameters have the same projection.
-
-TODO:
-explain the usage of cellFromPolygon with weights = TRUE and why that is important
-allow a cutoff to be passed for the weights
-}
-\examples{
-shape_file <- '/path/to/shapes/region.shp'
-array_file <- '/path/to/source/data/tasmax_monthly_1960-1969.nc'
-matching_cells <- find_matching_cells_for_polygon_from_spatial_objects(shape_file, array_file)
+It is important that both the geospatial feature SpatialPolygonsDataFrame and the geospatial array have the same projection.
 }

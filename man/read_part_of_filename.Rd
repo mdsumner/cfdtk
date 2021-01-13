@@ -2,16 +2,33 @@
 % Please edit documentation in R/cfdtk.R
 \name{read_part_of_filename}
 \alias{read_part_of_filename}
-\title{Read part from output of extract and calc}
+\alias{read_part_of_filename_model}
+\alias{read_part_of_filename_domain}
+\title{Read parts from output filename of extract and calc}
 \usage{
 read_part_of_filename(file, n, pattern = "_")
+
+read_part_of_filename_model(file)
+
+read_part_of_filename_domain(file)
 }
 \arguments{
-\item{n}{}
-}
-\value{
+\item{file}{Filename}
 
+\item{n}{Index of the element to return}
+
+\item{pattern}{Search pattern to split filename parts by (default: "_")}
 }
 \description{
-Read part from output of extract and calc
+Filenames are generated with the components split by an underscore,
+which is the default pattern by which to split the filename into parts
+}
+\details{
+Convenience functions exist for extracting common parts from file names
+}
+\examples{
+file <- 'CNRM-CERFACS-CNRM-CM5_TAS-10_1524-1822.rds'
+read_part_of_filename(file, 2)
+read_part_of_filename_model(file)
+read_part_of_filename_domain(file)
 }

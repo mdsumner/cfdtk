@@ -11,7 +11,7 @@ select_files_for_target_domain_and_variables(
 )
 }
 \arguments{
-\item{target_inputs_table}{A dataframe with list of input files to extract data from. Must contains the columns: model, domain, variable, file.}
+\item{target_inputs_table}{A data frame with list of input files to extract data from. Must contains the columns: model, domain, variable, file.}
 
 \item{target_domain}{Domain}
 

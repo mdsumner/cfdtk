@@ -2,13 +2,20 @@
 % Please edit documentation in R/cfdtk.R
 \name{create_polygons_target_cells_lookup_from_single_shape_file}
 \alias{create_polygons_target_cells_lookup_from_single_shape_file}
-\title{Title}
+\alias{create_polygons_target_cells_lookup_from_multiple_shape_files}
+\title{Create a target cells lookup from shape files}
 \usage{
 create_polygons_target_cells_lookup_from_single_shape_file(
   all_polygons_shape_file,
   target_domains_files,
   field_names = list(index = "OBJECTID", label = "LABEL", code = "CODE"),
   preferred_domains = list()
+)
+
+create_polygons_target_cells_lookup_from_multiple_shape_files(
+  polygons_properties_table,
+  target_domains_files,
+  preferred_domains
 )
 }
 \arguments{
@@ -17,10 +24,22 @@ create_polygons_target_cells_lookup_from_single_shape_file(
 \item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
 
 \item{field_names}{A named list with the following names: 'index', 'label', and 'code'}
+
+\item{preferred_domains}{Optional. A named list defining the preferred domain for each polygon.
+If the polygons are spread across multiple domains, then the preferred domain for each polygon must be specified explictly to distinguish between those that overlap.
+Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
+If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
+
+\item{polygons_properties_table}{A data frame specifying the shape files for each polygon, key fields for each polygon.
+Required columns: filename (full path to file), index (), label, (), code ()}
 }
 \value{
 A target cells lookup list
 }
 \description{
-For a single shape file, therefore a lot more can be assumed about the properties
+Details
+}
+\details{
+For a single shape file, some information can be assumed about the properties,
+whereas for multiple shape files from a mixture of sources, a lot more must be specified explicitly.
 }

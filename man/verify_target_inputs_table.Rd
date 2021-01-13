@@ -7,15 +7,11 @@
 verify_target_inputs_table(target_inputs_table)
 }
 \arguments{
-\item{target_inputs_table}{A dataframe with list of input files to extract data from. Must contains the columns: model, domain, variable, file.}
+\item{target_inputs_table}{A data frame with list of input files to extract data from. Must contains the columns: model, domain, variable, file.}
 }
 \value{
 No value is returned, but `stop` error may be thrown or warnings may be logged
 }
 \description{
 Verify that there are the name number of files ofr each combination of model / domain / variable
-}
-\examples{
-target_inputs_table <- identify_files_for_target_model_input_thredds(...)
-verify_target_inputs_table(target_inputs_table)
 }
