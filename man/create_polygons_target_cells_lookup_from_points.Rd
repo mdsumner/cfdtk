@@ -6,6 +6,8 @@
 \usage{
 create_polygons_target_cells_lookup_from_points(
   dataframe_locations,
+  target_domains,
+  cell_orog_lookup,
   target_domains_files,
   field_names = list(index = "id", label = "label", code = "code"),
   preferred_domains = list(),
@@ -16,6 +18,8 @@ create_polygons_target_cells_lookup_from_points(
 \item{dataframe_locations}{A data frame of locations representing points to extract.
 Required columns: label, lat, lon.
 Optional columns: index, code (these will be generated if they don't exist).}
+
+\item{cell_orog_lookup}{Cell orography lookup, as created by \code{create_cell_orography_lookup}}
 
 \item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
 

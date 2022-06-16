@@ -7,7 +7,7 @@
 \usage{
 progress_of_loop(element, all_elements, FUN = as.character)
 
-loginfo_progress(element, all_elements, n = 1, FUN = as.character)
+loginfo_progress(element, all_elements, n = 1, FUN = as.character, level = 1)
 }
 \arguments{
 \item{element}{Current element of the loop}
@@ -17,6 +17,8 @@ loginfo_progress(element, all_elements, n = 1, FUN = as.character)
 \item{FUN}{Function to pass element to before logging. For example, \code{basename} will shorten the log line for a file with a long path that is assumed or logged previously.}
 
 \item{n}{Every \code{n}th element will be logged. The first and last element are always logged. Useful for loops with a large number of iterations.}
+
+\item{level}{Indentation before the "(i/n)" part of the log}
 }
 \value{
 String

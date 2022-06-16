@@ -1,8 +1,8 @@
 Package: cfdtk
 Type: Package
 Title: Climate Futures Development Toolkit
-Version: 0.4.20210104
-Date: 2021-01-04
+Version: 0.5.20211108
+Date: 2021-11-08
 Authors@R: c(person("Climate Futures Tasmania", role = c("aut")),
              person("Dean", "Rollins", email = "dean.rollins@utas.edu.au", role = c("ctb", "cre")),
              person("Tom", "Remenyi", email = "tom.remenyi@utas.edu.au", role = c("ctb")))
@@ -21,13 +21,13 @@ Depends: logging,
     dplyr,
     tidyr,
     ggplot2,
+    raster,
     sf,
     lubridate
 Imports:
     rlang,
     methods,
     sp,
-    raster,
     readr,
     geosphere,
     grDevices,

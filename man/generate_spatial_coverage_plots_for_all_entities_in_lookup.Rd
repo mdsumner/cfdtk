@@ -10,7 +10,8 @@ generate_spatial_coverage_plots_for_all_entities_in_lookup(
   spatial_coverage_figures_directory,
   bg_map_sf = NULL,
   cell_numbers = FALSE,
-  domain = NULL
+  domain = NULL,
+  save_a4 = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ generate_spatial_coverage_plots_for_all_entities_in_lookup(
 \item{cell_numbers}{If TRUE, then a set of spatial coverage plots will be created with the cell numbers labelled. These will be placed in the \code{cell_nummbers} subdirectory.}
 
 \item{domain}{Use a specific domain for the plots, otherwise the preferred domain will be used (or if only one domain is present, then that domain will be used)}
+
+\item{save_a4}{Save an A4 ready version of each plot}
 }
 \description{
 Creates a spatial coverage plot for all of the entities in a \code{target_cells_lookup} list.

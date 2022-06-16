@@ -10,11 +10,11 @@
 # These prevent copious amounts of "no visible global function definition" warnings
 # in devtools::check() for really commonly used functions (like mutate, etc.)
 
+#' @import logging
 #' @import dplyr
 #' @importFrom plyr .
 #' @importFrom glue glue
 #' @import ggplot2
-#' @import logging
 #' @import lubridate
 #' @import sf
 #' @import tidyr
@@ -38,14 +38,17 @@ NULL
 #'
 #' @return A named list with the domains as the keys, and the values being vector of the matching cell numbers
 #' @export
-find_matching_cells_in_target_domains_for_polygon_sf <- function(polygon_sf, target_domains_files, weights_cutoff = 0) {
+find_matching_cells_in_target_domains_for_polygon_sf <- function(polygon_sf, target_domains, cell_orog_lookup, weights_cutoff = 0) {
 
   out_cells <- list()
-  for (domain in names(target_domains_files)) {
-    # domain <- names(target_domains_files)[1]
-    # logdebug(glue("Find matching cells in domain: {domain}"))
-    geospatial_array_filename <- target_domains_files[[domain]]
-    geospatial_array <- raster::raster(geospatial_array_filename, layer=1)
+  for (domain_ in target_domains) {
+    # domain_ <- target_domains[1]
+    domain_orog <- cell_orog_lookup %>% filter(domain == domain_)
+
+    geospatial_array <- raster::rasterFromXYZ(
+      xyz = domain_orog %>% dplyr::select(x = lon, y = lat, surface_height),
+      res = c(cell_orog_lookup$resolution_lon[1], cell_orog_lookup$resolution_lat[1]),
+      crs = cfdtk:::common_defaults$proj4string)
     geospatial_array_proj <- raster::projection(geospatial_array)
 
     shape_transformed_to_proj <- sf::st_transform(x = polygon_sf, crs = geospatial_array_proj)
@@ -53,7 +56,7 @@ find_matching_cells_in_target_domains_for_polygon_sf <- function(polygon_sf, tar
 
     cells_with_weights <- find_matching_cells_for_polygon_from_spatial_objects(geospatial_feature_spdf, geospatial_array, weights_cutoff)
 
-    out_cells[[domain]] <- cells_with_weights
+    out_cells[[domain_]] <- cells_with_weights
   }
 
   out_cells
@@ -229,10 +232,11 @@ convert_all_polygons_to_multipolygons <- function(polygons_all_sf, field_names =
 #' @param bg_map_sf If provided, then a set of spatial coverage plots will be created with this sf object as the background. These will be placed in the \code{cell_on_bg_map} subdirectory.
 #' @param cell_numbers If TRUE, then a set of spatial coverage plots will be created with the cell numbers labelled. These will be placed in the \code{cell_nummbers} subdirectory.
 #' @param domain Use a specific domain for the plots, otherwise the preferred domain will be used (or if only one domain is present, then that domain will be used)
+#' @param save_a4 Save an A4 ready version of each plot
 #'
 #' @export
 generate_spatial_coverage_plots_for_all_entities_in_lookup <- function(target_cells_lookup, cell_orog_lookup, spatial_coverage_figures_directory,
-                                                                       bg_map_sf = NULL, cell_numbers = FALSE, domain = NULL) {
+                                                                       bg_map_sf = NULL, cell_numbers = FALSE, domain = NULL, save_a4 = FALSE) {
 
   ensure_dir_exists(spatial_coverage_figures_directory, silent = TRUE)
 
@@ -256,6 +260,11 @@ generate_spatial_coverage_plots_for_all_entities_in_lookup <- function(target_ce
 
       save_png(gg_cells,
                file.path(spatial_coverage_figures_directory, 'cell_boundaries', glue("{target_region_code}.png")))
+
+      if (save_a4) {
+        save_png_a4(gg_cells,
+                    file.path(spatial_coverage_figures_directory, 'cell_boundaries', glue("{target_region_code}.png")))
+      }
     }
 
     # if cell_numbers is true, then create a folder with the cell boundaries plots with the cell numbers in the corner
@@ -270,6 +279,11 @@ generate_spatial_coverage_plots_for_all_entities_in_lookup <- function(target_ce
 
       save_png(gg_cell_numbers,
                file.path(spatial_coverage_figures_directory, 'cell_numbers', glue("{target_region_code}.png")))
+
+      if (save_a4) {
+        save_png_a4(gg_cell_numbers,
+                    file.path(spatial_coverage_figures_directory, 'cell_numbers', glue("{target_region_code}.png")))
+      }
     }
 
     # if a background map sf is provided, then plot the spatial coverage all of the entities on that as well
@@ -285,6 +299,11 @@ generate_spatial_coverage_plots_for_all_entities_in_lookup <- function(target_ce
 
       save_png(gg_map,
                file.path(spatial_coverage_figures_directory, 'cell_on_bg_map', glue("{target_region_code}.png")))
+
+      if (save_a4) {
+        save_png_a4(gg_map,
+                    file.path(spatial_coverage_figures_directory, 'cell_on_bg_map', glue("{target_region_code}.png")))
+      }
     }
   }
 }
@@ -672,9 +691,11 @@ create_shapes_from_dataframe_of_points <- function(dataframe_locations,
 #' @return A target cells lookup list
 #' @export
 create_polygons_target_cells_lookup_from_sf <- function(polygons_all_sf,
-                                                        target_domains_files,
+                                                        target_domains,
+                                                        cell_orog_lookup,
                                                         field_names = list(index = 'OBJECTID', label = 'LABEL', code = 'CODE'),
-                                                        preferred_domains = list()) {
+                                                        preferred_domains = list(),
+                                                        land_sea_mask = NULL) {
 
   logdebug('Convert all polygons to multipolygons')
   polygons_fixed_sf <- convert_all_polygons_to_multipolygons(polygons_all_sf, field_names = field_names)
@@ -705,11 +726,22 @@ create_polygons_target_cells_lookup_from_sf <- function(polygons_all_sf,
 
     loginfo(sprintf('(%s/%s) %s', polygon_sf_i, length(polygons_fixed_sf), polygon_sf[[field_name_label]]))
 
-    matching_cells_with_weights_for_domains <- find_matching_cells_in_target_domains_for_polygon_sf(polygon_sf, target_domains_files)
+    matching_cells_with_weights_for_domains <- find_matching_cells_in_target_domains_for_polygon_sf(polygon_sf, target_domains, cell_orog_lookup)
     matching_cells_for_domains <- sapply(matching_cells_with_weights_for_domains, function(e) {e$cell}, simplify = FALSE, USE.NAMES = TRUE)
 
+    if (!is.null(land_sea_mask)) {
+      for (target_domain in target_domains) {
+        land_cells <- land_sea_mask %>% filter(domain == target_domain) %>% filter(value == 100) %>% pull(cell)
+
+        matching_cells_with_weights_for_domains[[target_domain]] <- matching_cells_with_weights_for_domains[[target_domain]] %>%
+          filter(cell %in% land_cells)
+
+        matching_cells_for_domains[[target_domain]] <- intersect(matching_cells_for_domains[[target_domain]], land_cells)
+      }
+    }
+
     polygon_code <- polygon_sf[[field_name_code]]
-    preferred_domain <- pick_preferred_domain_from_lookup(preferred_domains = preferred_domains, polygon_code = polygon_code, target_domains_files = target_domains_files)
+    preferred_domain <- pick_preferred_domain_from_lookup(preferred_domains = preferred_domains, polygon_code = polygon_code, target_domains = target_domains)
 
     generate_target_cells_lookup_entry(
       id = polygon_index,
@@ -742,13 +774,12 @@ create_polygons_target_cells_lookup_from_sf <- function(polygons_all_sf,
 #' @return A target cells lookup list
 #' @export
 create_polygons_target_cells_lookup_from_points <- function(dataframe_locations,
+                                                            target_domains,
+                                                            cell_orog_lookup,
                                                             target_domains_files,
                                                             field_names = list(index = 'id', label = 'label', code = 'code'),
                                                             preferred_domains = list(),
                                                             proj4string = common_defaults$proj4string) {
-
-  logdebug('Create cell orography lookup from domain files')
-  cell_orog_lookup <- create_cell_orography_lookup_from_domain_list(target_domains_files)
 
   loginfo('Get matching cells for points...')
   num_points <- dim(dataframe_locations)[1]
@@ -780,13 +811,13 @@ create_polygons_target_cells_lookup_from_points <- function(dataframe_locations,
 
     matching_cells_for_domains <-
       sapply(
-        names(target_domains_files),
+        target_domains,
         function(target_domain) find_cell_from_lat_lon_values(cell_orog_lookup, point[['lat']], point[['lon']], target_domain),
         simplify = FALSE,
         USE.NAMES = TRUE)
 
     polygon_code <- point_code
-    preferred_domain <- pick_preferred_domain_from_lookup(preferred_domains = preferred_domains, polygon_code = polygon_code, target_domains_files = target_domains_files)
+    preferred_domain <- pick_preferred_domain_from_lookup(preferred_domains = preferred_domains, polygon_code = polygon_code, target_domains = target_domains)
 
     sf_of_point <- sf::st_sf(
       index = point_index,
@@ -831,14 +862,16 @@ create_polygons_target_cells_lookup_from_points <- function(dataframe_locations,
 #' @return A target cells lookup list
 #' @export
 create_polygons_target_cells_lookup_from_single_shape_file <- function(all_polygons_shape_file,
-                                                                       target_domains_files,
+                                                                       target_domains,
+                                                                       cell_orog_lookup,
                                                                        field_names = list(index = 'OBJECTID', label = 'LABEL', code = 'CODE'),
                                                                        preferred_domains = list()) {
   logdebug('Read all polygons as sf')
   polygons_all_sf <- sf::read_sf(all_polygons_shape_file)
 
   create_polygons_target_cells_lookup_from_sf(polygons_all_sf,
-                                              target_domains_files,
+                                              target_domains,
+                                              cell_orog_lookup,
                                               field_names = field_names,
                                               preferred_domains = preferred_domains)
 }
@@ -849,8 +882,9 @@ create_polygons_target_cells_lookup_from_single_shape_file <- function(all_polyg
 #' Required columns: filename (full path to file), index (), label, (), code ()
 #' @export
 create_polygons_target_cells_lookup_from_multiple_shape_files <- function(polygons_properties_table,
-                                                                          target_domains_files,
-                                                                          preferred_domains) {
+                                                                          target_domains,
+                                                                          cell_orog_lookup,
+                                                                          preferred_domains = list()) {
 
   num_polygons <- dim(polygons_properties_table)[1]
 
@@ -866,10 +900,10 @@ create_polygons_target_cells_lookup_from_multiple_shape_files <- function(polygo
     polygon_index <- lookup_row$index
     polygon_sf <- sf::read_sf(polygon_filename)
 
-    matching_cells_with_weights_for_domains <- find_matching_cells_in_target_domains_for_polygon_sf(polygon_sf, target_domains_files)
+    matching_cells_with_weights_for_domains <- find_matching_cells_in_target_domains_for_polygon_sf(polygon_sf, target_domains, cell_orog_lookup)
     matching_cells_for_domains <- sapply(matching_cells_with_weights_for_domains, function(e) { if(length(e) == 1 && is.na(e)) { NA } else { e$cell } }, simplify = FALSE, USE.NAMES = TRUE)
 
-    preferred_domain <- pick_preferred_domain_from_lookup(preferred_domains = preferred_domains, polygon_code = polygon_code, target_domains_files = target_domains_files)
+    preferred_domain <- pick_preferred_domain_from_lookup(preferred_domains = preferred_domains, polygon_code = polygon_code, target_domains = target_domains)
     logdebug(glue("Preferred domain: {preferred_domain}"))
 
     generate_target_cells_lookup_entry(
@@ -897,10 +931,10 @@ create_polygons_target_cells_lookup_from_multiple_shape_files <- function(polygo
 #' @param polygon_code Polygon to get preferrend domain for
 #'
 #' @return Domain to be chosen
-pick_preferred_domain_from_lookup <- function(preferred_domains, polygon_code, target_domains_files = NULL) {
+pick_preferred_domain_from_lookup <- function(preferred_domains, polygon_code, target_domains = NULL) {
   if (class(preferred_domains) == "list") {
-    if (length(target_domains_files) == 1) {
-      names(target_domains_files)[1]
+    if (length(target_domains) == 1) {
+      target_domains[1]
     } else {
       preferred_domains[[polygon_code]]
     }
@@ -1146,7 +1180,7 @@ get_cells <- function(cell_orog_lookup, target_cells, domain) {
   domain_ <- domain
 
   cell_orog_lookup %>%
-    filter(.data$cell %in% target_cells) %>%
+    filter(cell %in% target_cells) %>%
     filter(domain == domain_)
 }
 
@@ -1209,7 +1243,8 @@ lookup_domain_for_region <- function(target_cells_lookup, region) {
 lookup_cells_for_domain <- function(target_cells_lookup, target_domain) {
   lapply(target_cells_lookup, function(region) region[["matching_cells"]][[target_domain]]) %>%
   unlist %>%
-  sort(na.last = NULL) %>%  # remove NA values (these are from regions/cells that do not exist within the target domain)
+  # sort(na.last = NULL) %>%  # remove NA values (these are from regions/cells that do not exist within the target domain)
+  sort %>%
   unique
 }
 
@@ -1276,7 +1311,7 @@ lookup_region_for_cell <- function(target_cells_lookup, cell, highest_weighting_
              cells <- lookup_cells_for_region(target_cells_lookup = target_cells_lookup, region = region)
              cell %in% cells}, simplify = FALSE, USE.NAMES = TRUE) %>%
     unlist %>%
-    which(.data) %>%
+    which %>%
     names
 
   all_regions_with_weights <-
@@ -1287,16 +1322,16 @@ lookup_region_for_cell <- function(target_cells_lookup, cell, highest_weighting_
              target_cells_lookup[[region_]][['matching_cells_with_weights']][[domain]] %>%
                filter(cell == cell_) %>%
                mutate(region = region_) %>%
-               relocate(.data$region)
+               relocate(region)
              }) %>%
     bind_rows
 
   regions_sorted_by_weight <- all_regions_with_weights %>%
-    arrange(desc(.data$weight)) %>%
-    pull(.data$region)
+    arrange(desc(weight)) %>%
+    pull(region)
 
   if (highest_weighting_only) {
-    # cell with the hightest weighting
+    # cell with the highest weighting
     regions_sorted_by_weight %>% head(1)
   } else {
     regions_sorted_by_weight
@@ -1927,7 +1962,7 @@ extract_variable_from_files_by_cells <- function(target_files, target_cells, tar
     # need to unpivot/gather the data to have a cell column (with leading 'X' stripped off)
     bind_rows %>%
     mutate(layer = seq_len(n())) %>%
-    tidyr::gather(key = .data$cell, value = .data$value, -layer) %>%
+    tidyr::gather(key = 'cell', value = 'value', -.data$layer) %>%
     mutate(cell = as.integer(replace(.data$cell, TRUE, substring(.data$cell, 2)))) %>%
     dplyr::select(.data$layer, .data$cell, .data$value)
 }
@@ -2180,7 +2215,7 @@ verify_polygon_coverage_for_extracted_cells <- function(extract_directory, targe
 
   # this will include cells that weren't actually extracted in between the range of cells in each file,
   # but that's okay because these cells wont be in the region either since they aren't in the domain
-  all_cells_in_extract_directory <- list.files(path = extract_directory, pattern = '*.rds', full.names = TRUE) %>%
+  all_cells_in_extract_directory <- list.files(path = extract_directory, pattern = '\\.rds$', full.names = TRUE) %>%
     str_extract(pattern = '(\\d+-\\d+)\\.rds') %>%
     str_extract(pattern = '(\\d+-\\d+)') %>%
     str_split(pattern = '-') %>%
@@ -2428,8 +2463,9 @@ identify_files_with_data_for_target_cells <- function(extract_data_dir, target_m
     stop(msg)
   }
 
-  all_files_split_cell_range_field <- grep("[0-9]{2,}-[0-9]{2,}", str_split(all_files, "_")[[1]])
-  cell_range_per_file <- do.call(rbind, str_split(unlist(lapply(str_split(all_files, "_"), function(x){x[all_files_split_cell_range_field]})), "-"))
+  all_files_no_ext <- str_remove(all_files, '\\.rds')
+  all_files_split_cell_range_field <- grep("[0-9]{2,}-[0-9]{2,}", str_split(all_files_no_ext, "_")[[1]])
+  cell_range_per_file <- do.call(rbind, str_split(unlist(lapply(str_split(all_files_no_ext, "_"), function(x){x[all_files_split_cell_range_field]})), "-"))
 
   target_files <- lapply(target_cells, function (target_cell) {
     target_files_index <- which( c(target_cell >= as.numeric(cell_range_per_file[,1]) & target_cell <= as.numeric(cell_range_per_file[,2])) == TRUE)
@@ -2606,12 +2642,12 @@ identify_files_for_target_cells <- function(extract_directory, target_model, tar
 
   # easier to follow way
   cell_range_per_file <- all_files %>%
-    str_replace('.rds', '') %>%
+    str_replace('\\.rds', '') %>%
     str_split("_") %>%
     lapply(function(x) x[all_files_split_cell_range_field]) %>%
     unlist %>%
     str_split('-') %>%
-    do.call(rbind, .data)
+    do.call(rbind, .)
 
   ## old way messy
   # cell_range_per_file <- do.call(rbind, str_split(unlist(lapply(str_split(str_replace(all_files, '.rds', ''), "_"), function(x){x[all_files_split_cell_range_field]})), "-"))
@@ -2717,13 +2753,13 @@ generate_output_filename_prefix <- function(target_model, target_domain, cell_st
 #' write_to_file(datasets::mtcars, '/path/to/dir', 'project_name', 'csv')
 #' }
 write_to_file <- function(x, output_directory, filename, format) {
-  loginfo(glue("Saving results to file on disk..."))
+  logdebug(glue("Saving results to file on disk..."))
   logdebug(glue("R object size: {object.size(x)} bytes"))
 
   ensure_dir_exists(output_directory, silent = TRUE)
 
   # if filename already has the desired extention then don't add it
-  full_filename <- if (str_split(filename, pattern = '\\.') %>% .data[[1]] %>% tail(1) == format) {
+  full_filename <- if (str_split(filename, pattern = '\\.') %>% .[[1]] %>% tail(1) == format) {
     file.path(output_directory, glue("{filename}"))
   } else {
     file.path(output_directory, glue("{filename}.{format}"))
@@ -2736,8 +2772,7 @@ write_to_file <- function(x, output_directory, filename, format) {
          # default:
          { stop(glue("Unknown format '{format}'")) })
 
-  loginfo(glue("Saved: {full_filename}"))
-  loginfo(glue("Size: {gdata::humanReadable(file.info(full_filename)$size)}"))
+  loginfo(glue("Saved: {full_filename} ({gdata::humanReadable(file.info(full_filename)$size)})"))
 }
 
 
@@ -2928,6 +2963,31 @@ ensure_dir_exists <- function(path, silent = FALSE) {
 }
 
 
+#' Run if file doesn't exist or if force flag is set
+#'
+#' @param file Filename
+#' @param force If TRUE, then will return TRUE regardless of whether the file exists or not
+#'
+#' @return Logical
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' cache_file <- '/path/to/file.rds'
+#' force_calc <- FALSE
+#'
+#' if(file_doesnt_exist_or_force(cache_file, force_calc)) {
+#'   # do something to create 'dataframe'
+#'   saveRDS(dataframe, cache_file)
+#' } else {
+#'   dataframe <- readRDS(cache_file)
+#' }
+#' }
+file_doesnt_exist_or_force <- function(file, force = FALSE) {
+  !file.exists(file) || force
+}
+
+
 
 # Data Categorisation Functions -------------------------------------------
 
@@ -2965,19 +3025,23 @@ hist2d <- function(xy, x_breaks, y_breaks) {
   bounds_errors <- c()
 
   # check x range
-  if (min(xy[,1]) < min(x_breaks)) {
-    bounds_errors <- c(bounds_errors, glue("Min x value ({min(xy[,1])}) is outside x_breaks ({logarray(x_breaks)})"))
+  min_xy_1 <- min(xy[,1], na.rm = TRUE)
+  max_xy_1 <- max(xy[,1], na.rm = TRUE)
+  if (min_xy_1 < min(x_breaks)) {
+    bounds_errors <- c(bounds_errors, glue("Min x value ({min_xy_1}) is outside x_breaks ({logarray(x_breaks)})"))
   }
-  if (max(xy[,1]) > max(x_breaks)) {
-    bounds_errors <- c(bounds_errors, glue("Max x value ({max(xy[,1])}) is outside x_breaks ({logarray(x_breaks)})"))
+  if (max_xy_1 > max(x_breaks)) {
+    bounds_errors <- c(bounds_errors, glue("Max x value ({max_xy_1}) is outside x_breaks ({logarray(x_breaks)})"))
   }
 
   # check y range
-  if (min(xy[,2]) < min(y_breaks)) {
-    bounds_errors <- c(bounds_errors, glue("Min y value ({min(xy[,2])}) is outside y_breaks ({logarray(y_breaks)})"))
+  min_xy_2 <- min(xy[,2], na.rm = TRUE)
+  max_xy_2 <- max(xy[,2], na.rm = TRUE)
+  if (min_xy_2 < min(y_breaks)) {
+    bounds_errors <- c(bounds_errors, glue("Min y value ({min_xy_2}) is outside y_breaks ({logarray(y_breaks)})"))
   }
-  if (max(xy[,2]) > max(y_breaks)) {
-    bounds_errors <- c(bounds_errors, glue("Max y value ({max(xy[,2])}) is outside y_breaks ({logarray(y_breaks)})"))
+  if (max_xy_2 > max(y_breaks)) {
+    bounds_errors <- c(bounds_errors, glue("Max y value ({max_xy_2}) is outside y_breaks ({logarray(y_breaks)})"))
   }
 
   if (length(bounds_errors) > 0) {
@@ -3291,13 +3355,8 @@ get_scale_limits_from_values <- function(values, interval = 1, snap_lower_to_zer
 #' }
 create_or_read <- function(file, FUN, ARGS = list(), force = FALSE, skip_read_if_exists = FALSE) {
   if(force | !file.exists(file)) {
-    logdebug("File does not exist. Running function:")
     result <- do.call(what = FUN, args = ARGS)
-    loginfo(glue("Saving to {file}"))
-
-    # save object, creating directory if it doesn't exist
-    dir.create(dirname(file), showWarnings = FALSE, recursive = TRUE)
-    saveRDS(result, file)
+    save_rds(result, file)
   } else if (skip_read_if_exists) {
     loginfo("Skipping read")
     result <- TRUE
@@ -3598,6 +3657,20 @@ label_to_code <- function(label) {
     str_replace_all(pattern = '_+', replacement = '_') %>%
     # dont end with an underscore
     str_replace_all(pattern = '_$', replacement = '')
+}
+
+
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vector_to_c <- function(x) {
+  s <- x %>% str_replace(pattern = '^', replacement = '"') %>% str_replace(pattern = '$', replacement = '"') %>% glue_collapse(sep = ', ')
+  glue("c({s})")
 }
 
 
@@ -3970,6 +4043,7 @@ progress_of_loop <- function(element, all_elements, FUN = as.character) {
 
 #' @rdname progress_of_loop
 #' @param n Every \code{n}th element will be logged. The first and last element are always logged. Useful for loops with a large number of iterations.
+#' @param level Indentation before the "(i/n)" part of the log
 #'
 #' @export
 #'
@@ -3982,7 +4056,7 @@ progress_of_loop <- function(element, all_elements, FUN = as.character) {
 #' loginfo_progress(all_files[1], all_files, FUN = basename)
 #' loginfo_progress(all_files[5], all_files, FUN = basename)
 #' }
-loginfo_progress <- function(element, all_elements, n = 1, FUN = as.character) {
+loginfo_progress <- function(element, all_elements, n = 1, FUN = as.character, level = 1) {
   i <- match(element, all_elements)
 
   # if FUN is basename, then log the dirname on the first iteration
@@ -4002,10 +4076,31 @@ loginfo_progress <- function(element, all_elements, n = 1, FUN = as.character) {
     }
   }
 
+  level_str <- rep(x = '_', times = (level-1)) %>% paste(collapse = '')
+
   # always log if n == 1, log on the first iteration, every nth iteration, and every last iteration
   if (n == 1 || i == 1 || i %% n == 0 || i == length(all_elements)) {
-    loginfo(progress_of_loop(element, all_elements, FUN = FUN))
+    loginfo(paste0(level_str, progress_of_loop(element, all_elements, FUN = FUN)))
   }
+}
+
+
+
+# Project Setup Functions -------------------------------------------------
+
+#' Adds variables for common project directories to the global environment and ensures they exist
+#'
+#' TODO: More info on what is created once this has matured
+#'
+#' @param project_directory Base project directory
+#'
+#' @export
+setup_common_project_directories <- function(project_directory) {
+  project_input_directory <<- file.path(project_directory, 'input') %>% ensure_dir_exists
+  project_output_directory <<- file.path(project_directory, 'output') %>% ensure_dir_exists
+  project_ref_directory <<- file.path(project_directory, 'ref') %>% ensure_dir_exists
+
+  output_directory_figures <<- file.path(project_output_directory, 'figures') %>% ensure_dir_exists
 }
 
 

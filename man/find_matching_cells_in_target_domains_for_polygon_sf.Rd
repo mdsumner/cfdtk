@@ -6,14 +6,15 @@
 \usage{
 find_matching_cells_in_target_domains_for_polygon_sf(
   polygon_sf,
-  target_domains_files,
+  target_domains,
+  cell_orog_lookup,
   weights_cutoff = 0
 )
 }
 \arguments{
 \item{polygon_sf}{A simple feature (sf) object representing the polygon}
 
-\item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
+\item{cell_orog_lookup}{Cell orography lookup, as created by \code{create_cell_orography_lookup}}
 
 \item{weights_cutoff}{Cells with a weighting below this value will be excluded from the returned results}
 }

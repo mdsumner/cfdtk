@@ -7,7 +7,7 @@
 pick_preferred_domain_from_lookup(
   preferred_domains,
   polygon_code,
-  target_domains_files = NULL
+  target_domains = NULL
 )
 }
 \arguments{
@@ -17,8 +17,6 @@ Use the code for the polygon (as will be created in \code{convert_all_polygons_t
 If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
 
 \item{polygon_code}{Polygon to get preferrend domain for}
-
-\item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
 }
 \value{
 Domain to be chosen

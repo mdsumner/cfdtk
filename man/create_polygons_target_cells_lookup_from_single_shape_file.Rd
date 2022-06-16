@@ -7,21 +7,23 @@
 \usage{
 create_polygons_target_cells_lookup_from_single_shape_file(
   all_polygons_shape_file,
-  target_domains_files,
+  target_domains,
+  cell_orog_lookup,
   field_names = list(index = "OBJECTID", label = "LABEL", code = "CODE"),
   preferred_domains = list()
 )
 
 create_polygons_target_cells_lookup_from_multiple_shape_files(
   polygons_properties_table,
-  target_domains_files,
-  preferred_domains
+  target_domains,
+  cell_orog_lookup,
+  preferred_domains = list()
 )
 }
 \arguments{
 \item{all_polygons_shape_file}{Shape file will polygons for all regions}
 
-\item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
+\item{cell_orog_lookup}{Cell orography lookup, as created by \code{create_cell_orography_lookup}}
 
 \item{field_names}{A named list with the following names: 'index', 'label', and 'code'}
 

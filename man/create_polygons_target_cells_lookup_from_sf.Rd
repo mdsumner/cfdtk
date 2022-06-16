@@ -6,15 +6,17 @@
 \usage{
 create_polygons_target_cells_lookup_from_sf(
   polygons_all_sf,
-  target_domains_files,
+  target_domains,
+  cell_orog_lookup,
   field_names = list(index = "OBJECTID", label = "LABEL", code = "CODE"),
-  preferred_domains = list()
+  preferred_domains = list(),
+  land_sea_mask = NULL
 )
 }
 \arguments{
 \item{polygons_all_sf}{Simple feature object with polygons for all regions}
 
-\item{target_domains_files}{Named list defining each domain to be assessed with an example NetCDF file with the desired projection for each domain}
+\item{cell_orog_lookup}{Cell orography lookup, as created by \code{create_cell_orography_lookup}}
 
 \item{field_names}{A named list with the following names: 'index', 'label', and 'code'}
 
