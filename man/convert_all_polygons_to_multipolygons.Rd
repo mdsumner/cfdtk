@@ -23,11 +23,15 @@ to a list of simple features only having one MULTIPOLYGON object making up its g
 }
 \details{
 The field list points to the columns in the simple feature that refer to:
-* index: the unique index (usually OBJECTID)
-* label: the label for each feature
+\itemize{
+  \item{index: the unique index (usually OBJECTID)}
+  \item{label: the label for each feature}
+}
 
-And to be generated, *TODO if it does not exist TODO*:
-* code: a unique code for each feature (this will be derived from the label)
+And to refer to or be generated if it does not exist:
+\itemize{
+  \item{code: a unique code for each feature (this will be derived from the label)}
+}
 
 In most cases, the default field names of ('OBJECTID', 'CODE', 'LABEL') will be incorrect
 }

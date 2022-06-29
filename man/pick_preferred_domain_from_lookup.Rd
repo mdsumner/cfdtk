@@ -13,7 +13,7 @@ pick_preferred_domain_from_lookup(
 \arguments{
 \item{preferred_domains}{Optional. A named list defining the preferred domain for each polygon.
 If the polygons are spread across multiple domains, then the preferred domain for each polygon must be specified explictly to distinguish between those that overlap.
-Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
+Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the domain as the value.
 If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
 
 \item{polygon_code}{Polygon to get preferrend domain for}

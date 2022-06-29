@@ -1,14 +1,12 @@
 # Info --------------------------------------------------------------------
 
-# How to navigate this file
-# About each section
-# Mention coding conventions or location of other document
+# See README.md for details on coding conventions, tests, etc.
 
 
 # Namespace Imports -------------------------------------------------------
 
 # These prevent copious amounts of "no visible global function definition" warnings
-# in devtools::check() for really commonly used functions (like mutate, etc.)
+# in devtools::check() for really commonly used functions (like mutate from dplyr)
 
 #' @import logging
 #' @import dplyr
@@ -106,11 +104,15 @@ find_matching_cells_for_polygon_from_spatial_objects <- function(geospatial_feat
 #' to a list of simple features only having one MULTIPOLYGON object making up its geometry.
 #'
 #' The field list points to the columns in the simple feature that refer to:
-#' * index: the unique index (usually OBJECTID)
-#' * label: the label for each feature
+#' \itemize{
+#'   \item{index: the unique index (usually OBJECTID)}
+#'   \item{label: the label for each feature}
+#' }
 #'
-#' And to be generated, *TODO if it does not exist TODO*:
-#' * code: a unique code for each feature (this will be derived from the label)
+#' And to refer to or be generated if it does not exist:
+#' \itemize{
+#'   \item{code: a unique code for each feature (this will be derived from the label)}
+#' }
 #'
 #' In most cases, the default field names of ('OBJECTID', 'CODE', 'LABEL') will be incorrect
 #'
@@ -687,6 +689,7 @@ create_shapes_from_dataframe_of_points <- function(dataframe_locations,
 #' @inheritParams convert_all_polygons_to_multipolygons
 #' @inheritParams find_matching_cells_in_target_domains_for_polygon_sf
 #' @inheritParams common_parameter_descriptions
+#' @param land_sea_mask Optional. A land/sea mask definition for each cell in each domain. If present it will only include land cells in the output. Contains 3 columns: cell, value and domain. Value is 0 for sea and 100 for land.
 #'
 #' @return A target cells lookup list
 #' @export
@@ -849,10 +852,13 @@ create_polygons_target_cells_lookup_from_points <- function(dataframe_locations,
 
 #' Create a target cells lookup from shape files
 #'
-#' Details
+#' From either a single file (which could have a sf collection) or multiple files, create a `target_cells_lookup` that is
+#' a list with an entry per region with the cells and domain for that region, the sf object itself is also embedded within.
 #'
-#' For a single shape file, some information can be assumed about the properties,
-#' whereas for multiple shape files from a mixture of sources, a lot more must be specified explicitly.
+#' @details For a single shape file, some information can be assumed about the properties
+#' (since the single file can have a collection of multiple shapes),
+#' whereas for multiple shape files from a mixture of sources, a lot more must be specified explicitly with the `polygons_properties_table`.
+#' It might be easier in some cases to just use the 'single shape file' version multiple times.
 #'
 #' @param all_polygons_shape_file Shape file will polygons for all regions
 #' @inheritParams convert_all_polygons_to_multipolygons
@@ -3293,9 +3299,9 @@ is_Sep_to_Apr <- function(Austral_season_month) {
 #'
 #' @param values Values that will be plotted
 #' @param interval Set the limits of the scale to the next multiple of this interval past the min and max of \code{values}
-#' @param snap_lower_to_zero If the lowest valus is above zero, then snap the lower limit of the scale to zero
-#' @param snap_upper_to_zero If the highest value is below zero, then snap the upper limit of the scale to zero
-#' @param symmetrical Make scale symmetrical about zero
+#' @param snap_lower_to_zero If the lowest value is above zero, then snap the lower limit of the scale to zero. Defaults to TRUE.
+#' @param snap_upper_to_zero If the highest value is below zero, then snap the upper limit of the scale to zero. Defaults to TRUE
+#' @param symmetrical Make scale symmetrical about zero (overrides snap to zero behaviour). Defaults to FALSE.
 #'
 #' @return Vector with two values, [1] is the min scale limit, [2] is the max scale limit
 #' @export
@@ -3306,6 +3312,9 @@ is_Sep_to_Apr <- function(Austral_season_month) {
 #'                              snap_lower_to_zero = TRUE,
 #'                              snap_upper_to_zero = FALSE,
 #'                              symmetrical = FALSE)
+#' get_scale_limits_from_values(values = c(4, 5, 6, 7), interval = 5)  # 0 10
+#' get_scale_limits_from_values(values = c(11, 12, 13), interval = 5, snap_lower_to_zero = FALSE)  # 10 15
+#' get_scale_limits_from_values(values = c(4, 5, 6, 7), interval = 3, symmetrical = TRUE)  # -9 9
 get_scale_limits_from_values <- function(values, interval = 1, snap_lower_to_zero = TRUE, snap_upper_to_zero = TRUE, symmetrical = FALSE) {
   if (any(is.na(values))) {
     warning("Parameter 'values' has NA values. These will be excluded from the calculations.")
@@ -3330,13 +3339,13 @@ get_scale_limits_from_values <- function(values, interval = 1, snap_lower_to_zer
 
 # Functions used to perform utility takes to facilitate higher level functions elsewhere
 
-#' Load pre-calculated results from file if it exists, if not calculate results as save it to the file
+#' Load pre-calculated results from a file if it exists, if not calculate results and save it to a file
 #'
-#' @param file Name of the file
+#' @param file Filename to read from / save to
 #' @param FUN Function (or code block) to create the object that is to be stored and subsequently retrieved from the \code{file}
 #' @param ARGS List of arguments to be passed to the function. Can be skipped (the default is an empty list), and the arguments are directly passed in the \code{FUN} parameter.
 #' @param force logical. If TRUE, then force recreation and saving of the object, even if file already exists. Set to FALSE by default.
-#' @param skip_read_if_exists logical. TODO
+#' @param skip_read_if_exists logical. If TRUE, then don't read from the file if it exists. Can be used to simply ensure that all files exist and will be created if they don't (e.g. if some files are large and take a long time to load, this load can be skipped). Set to FALSE by default.
 #'
 #' @return The result of FUN
 #' @export
@@ -3609,25 +3618,6 @@ is_zero_range_vector <- function(x, tol = .Machine$double.eps ^ 0.5) {
 }
 
 
-#' Check for FALSE
-#'
-#' Shortcut for identical(x, FALSE)
-#'
-#' ggnewscale and other packages use the built in function isFALSE (for R >= 3.5).
-#' This is a replacement, until R is upgraded to >= 3.5
-#' @param x any object
-#'
-#' @return returns TRUE if x is identical to FALSE, FALSE otherwise.
-#' @export
-#'
-#' @examples
-#' isFALSE(0)
-#' isFALSE(FALSE)
-isFALSE <- function(x) {
-  identical(x, FALSE)
-}
-
-
 #' Convert a "label" string to a "code" string
 #'
 #' String will be converted to lowercase with underscores in place of spaces, and punctuation removed
@@ -3660,14 +3650,16 @@ label_to_code <- function(label) {
 }
 
 
-#' Title
+#' Takes an R vector and prints a string that can be used to define that vector
 #'
-#' @param x
+#' @param x Vector
 #'
-#' @return
+#' @return A string (glue object) that is printed to the console
 #' @export
 #'
 #' @examples
+#' month.abb
+#' vector_to_c(month.abb)
 vector_to_c <- function(x) {
   s <- x %>% str_replace(pattern = '^', replacement = '"') %>% str_replace(pattern = '$', replacement = '"') %>% glue_collapse(sep = ', ')
   glue("c({s})")
@@ -4090,8 +4082,6 @@ loginfo_progress <- function(element, all_elements, n = 1, FUN = as.character, l
 
 #' Adds variables for common project directories to the global environment and ensures they exist
 #'
-#' TODO: More info on what is created once this has matured
-#'
 #' @param project_directory Base project directory
 #'
 #' @export
@@ -4109,7 +4099,10 @@ setup_common_project_directories <- function(project_directory) {
 
 #' @name common_parameter_descriptions
 #' @title Common parameter descriptions
-#' @description A placeholder to contain descriptions for parameters that are used in multiple functions
+#' @description A placeholder to contain descriptions for parameters that are used in multiple functions.
+#' @details To import any of the below param definitions in a function definition,
+#' simply add "(at)inheritParams common_parameter_descriptions" above the function
+#' and any params that exist below will be included (there is no issue with extra param definitions being included)
 #' @keywords internal
 #'
 #' @param target_cells_lookup Pre-calculated lookup listing the cells that exist in each region for each domain
@@ -4118,10 +4111,13 @@ setup_common_project_directories <- function(project_directory) {
 #' @param lat Latitude, in decimal degrees
 #' @param lon Longitude, in decimal degrees
 #' @param proj4string A proj4string describing coordinate reference system to be used (set to "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" by default
-#' @param field_names A named list with the following names: 'index', 'label', and 'code'
+#' @param field_names A named list with the following names: 'index', 'label', and 'code'. These define the columns in the shape file that correspond to the relevant property.
+#' 'index' is simply a unique number to identify the index of the shape in the collection (this is useful if you need to refer back to the original shape file for extra information about the shope), if the shape file does not have such a column, the id in the target_cells_lookup will be generated starting from 1;
+#' 'label' is the column that is to be used for the title of the shape, it is mandatory;
+#' 'code', is the column that has a 'code' version of the title, a good approach with this is to refer to a column that doesn't exist in the shape then the function will generate a code from the 'label' column.
 #' @param preferred_domains Optional. A named list defining the preferred domain for each polygon.
 #' If the polygons are spread across multiple domains, then the preferred domain for each polygon must be specified explictly to distinguish between those that overlap.
-#' Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
+#' Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the domain as the value.
 #' If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.
 NULL
 

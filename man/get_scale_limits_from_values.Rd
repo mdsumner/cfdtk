@@ -17,11 +17,11 @@ get_scale_limits_from_values(
 
 \item{interval}{Set the limits of the scale to the next multiple of this interval past the min and max of \code{values}}
 
-\item{snap_lower_to_zero}{If the lowest valus is above zero, then snap the lower limit of the scale to zero}
+\item{snap_lower_to_zero}{If the lowest value is above zero, then snap the lower limit of the scale to zero. Defaults to TRUE.}
 
-\item{snap_upper_to_zero}{If the highest value is below zero, then snap the upper limit of the scale to zero}
+\item{snap_upper_to_zero}{If the highest value is below zero, then snap the upper limit of the scale to zero. Defaults to TRUE}
 
-\item{symmetrical}{Make scale symmetrical about zero}
+\item{symmetrical}{Make scale symmetrical about zero (overrides snap to zero behaviour). Defaults to FALSE.}
 }
 \value{
 Vector with two values, [1] is the min scale limit, [2] is the max scale limit
@@ -38,4 +38,7 @@ get_scale_limits_from_values(values = mtcars$mpg,
                              snap_lower_to_zero = TRUE,
                              snap_upper_to_zero = FALSE,
                              symmetrical = FALSE)
+get_scale_limits_from_values(values = c(4, 5, 6, 7), interval = 5)  # 0 10
+get_scale_limits_from_values(values = c(11, 12, 13), interval = 5, snap_lower_to_zero = FALSE)  # 10 15
+get_scale_limits_from_values(values = c(4, 5, 6, 7), interval = 3, symmetrical = TRUE)  # -9 9
 }

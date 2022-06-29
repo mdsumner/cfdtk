@@ -16,14 +16,22 @@
 
 \item{proj4string}{A proj4string describing coordinate reference system to be used (set to "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" by default}
 
-\item{field_names}{A named list with the following names: 'index', 'label', and 'code'}
+\item{field_names}{A named list with the following names: 'index', 'label', and 'code'. These define the columns in the shape file that correspond to the relevant property.
+'index' is simply a unique number to identify the index of the shape in the collection (this is useful if you need to refer back to the original shape file for extra information about the shope), if the shape file does not have such a column, the id in the target_cells_lookup will be generated starting from 1;
+'label' is the column that is to be used for the title of the shape, it is mandatory;
+'code', is the column that has a 'code' version of the title, a good approach with this is to refer to a column that doesn't exist in the shape then the function will generate a code from the 'label' column.}
 
 \item{preferred_domains}{Optional. A named list defining the preferred domain for each polygon.
 If the polygons are spread across multiple domains, then the preferred domain for each polygon must be specified explictly to distinguish between those that overlap.
-Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
+Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the domain as the value.
 If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
 }
 \description{
-A placeholder to contain descriptions for parameters that are used in multiple functions
+A placeholder to contain descriptions for parameters that are used in multiple functions.
+}
+\details{
+To import any of the below param definitions in a function definition,
+simply add "(at)inheritParams common_parameter_descriptions" above the function
+and any params that exist below will be included (there is no issue with extra param definitions being included)
 }
 \keyword{internal}

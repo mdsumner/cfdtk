@@ -2,16 +2,20 @@
 % Please edit documentation in R/cfdtk.R
 \name{vector_to_c}
 \alias{vector_to_c}
-\title{Title}
+\title{Takes an R vector and prints a string that can be used to define that vector}
 \usage{
 vector_to_c(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{Vector}
 }
 \value{
-
+A string (glue object) that is printed to the console
 }
 \description{
-Title
+Takes an R vector and prints a string that can be used to define that vector
+}
+\examples{
+month.abb
+vector_to_c(month.abb)
 }

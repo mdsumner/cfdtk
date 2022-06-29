@@ -10,5 +10,5 @@ setup_common_project_directories(project_directory)
 \item{project_directory}{Base project directory}
 }
 \description{
-TODO: More info on what is created once this has matured
+Adds variables for common project directories to the global environment and ensures they exist
 }

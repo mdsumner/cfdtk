@@ -2,7 +2,7 @@
 % Please edit documentation in R/cfdtk.R
 \name{create_or_read}
 \alias{create_or_read}
-\title{Load pre-calculated results from file if it exists, if not calculate results as save it to the file}
+\title{Load pre-calculated results from a file if it exists, if not calculate results and save it to a file}
 \usage{
 create_or_read(
   file,
@@ -13,7 +13,7 @@ create_or_read(
 )
 }
 \arguments{
-\item{file}{Name of the file}
+\item{file}{Filename to read from / save to}
 
 \item{FUN}{Function (or code block) to create the object that is to be stored and subsequently retrieved from the \code{file}}
 
@@ -21,13 +21,13 @@ create_or_read(
 
 \item{force}{logical. If TRUE, then force recreation and saving of the object, even if file already exists. Set to FALSE by default.}
 
-\item{skip_read_if_exists}{logical. TODO}
+\item{skip_read_if_exists}{logical. If TRUE, then don't read from the file if it exists. Can be used to simply ensure that all files exist and will be created if they don't (e.g. if some files are large and take a long time to load, this load can be skipped). Set to FALSE by default.}
 }
 \value{
 The result of FUN
 }
 \description{
-Load pre-calculated results from file if it exists, if not calculate results as save it to the file
+Load pre-calculated results from a file if it exists, if not calculate results and save it to a file
 }
 \examples{
 \donttest{

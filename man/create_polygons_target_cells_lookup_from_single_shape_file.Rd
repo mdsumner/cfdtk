@@ -29,7 +29,7 @@ create_polygons_target_cells_lookup_from_multiple_shape_files(
 
 \item{preferred_domains}{Optional. A named list defining the preferred domain for each polygon.
 If the polygons are spread across multiple domains, then the preferred domain for each polygon must be specified explictly to distinguish between those that overlap.
-Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the doman as the value.
+Use the code for the polygon (as will be created in \code{convert_all_polygons_to_multipolygons}) as the key, and the domain as the value.
 If only one domain is present in the \code{target_domains_files} parameter, then this list is not required.}
 
 \item{polygons_properties_table}{A data frame specifying the shape files for each polygon, key fields for each polygon.
@@ -39,9 +39,12 @@ Required columns: filename (full path to file), index (), label, (), code ()}
 A target cells lookup list
 }
 \description{
-Details
+From either a single file (which could have a sf collection) or multiple files, create a `target_cells_lookup` that is
+a list with an entry per region with the cells and domain for that region, the sf object itself is also embedded within.
 }
 \details{
-For a single shape file, some information can be assumed about the properties,
-whereas for multiple shape files from a mixture of sources, a lot more must be specified explicitly.
+For a single shape file, some information can be assumed about the properties
+(since the single file can have a collection of multiple shapes),
+whereas for multiple shape files from a mixture of sources, a lot more must be specified explicitly with the `polygons_properties_table`.
+It might be easier in some cases to just use the 'single shape file' version multiple times.
 }
